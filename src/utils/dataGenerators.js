@@ -175,21 +175,20 @@ export const generateAssets = (count) => {
     // 환자 유형별 상태 분포 설정
     if (pType === "입원") {
       if (rand < 0.7) status = "IN_USE";
-      else if (rand < 0.8) status = "CLEANING";
+      else if (rand < 0.8) status = "CLEANING_REPAIR";
       else if (rand < 0.9) status = "STORAGE";
-      else status = "REPAIR";
+      else status = "CLEANING_REPAIR";
     } else {
       if (rand < 0.1) status = "STORAGE";
       else if (rand < 0.2) status = "DISPATCH";
       else if (rand < 0.25) status = "DELIVERED";
       else if (rand < 0.75) status = "IN_USE";
       else if (rand < 0.85) status = "RETURN";
-      else if (rand < 0.95) status = "CLEANING";
-      else status = "REPAIR";
+      else status = "CLEANING_REPAIR";
     }
 
     const hasUser = ["IN_USE", "DISPATCH", "DELIVERED", "RETURN"].includes(status);
-    const wearDate = hasUser
+    const wornDate = hasUser
       ? new Date(Date.now() - Math.floor(Math.random() * 10 * 24 * 60 * 60 * 1000))
           .toISOString().split("T")[0]
       : "-";
@@ -206,7 +205,7 @@ export const generateAssets = (count) => {
       lastSync: new Date(Date.now() - Math.floor(Math.random() * 10000000)).toLocaleString(),
       patientName: hasUser ? names[i % names.length] : "-",
       patientType: pType,
-      wearDate,
+      wornDate,
       locationLabel: hasUser
         ? pType === "입원" ? `71-${internalLocCode}` : `재택-${i % 5}`
         : status === "STORAGE" ? "제1보관소" : "AS센터",

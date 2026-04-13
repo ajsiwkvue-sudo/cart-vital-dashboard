@@ -90,9 +90,9 @@ const LogisticsManager = () => {
               ...asset,
               status: newStatus,
               ...(newStatus === 'STORAGE' && {
-                assignedPatient: null,
-                assignedLocation: null,
-                wornDate: null,
+                patientName: '-',
+                locationLabel: '제1보관소',
+                wornDate: '-',
               }),
             }
           : asset
@@ -108,8 +108,8 @@ const LogisticsManager = () => {
           ? {
               ...asset,
               status: 'IN_USE',
-              assignedPatient: patientInfo.patient,
-              assignedLocation: patientInfo.location,
+              patientName: patientInfo.patientName,
+              locationLabel: patientInfo.location,
               wornDate: new Date().toISOString().split('T')[0],
             }
           : asset
@@ -143,7 +143,7 @@ const LogisticsManager = () => {
       asset.id,
       statusLabelMap[asset.status],
       asset.patientType,
-      asset.assignedPatient || '-',
+      asset.patientName || '-',
       asset.wornDate || '-',
       calculateDaysElapsed(asset.wornDate),
       `${asset.battery}%`,
@@ -167,12 +167,12 @@ const LogisticsManager = () => {
   // Add new device
   const handleAddDevice = () => {
     const newAsset = {
-      id: `CART-${Date.now()}`,
+      id: `CR-${String(assets.length + 1).padStart(4, '0')}`,
       status: 'STORAGE',
-      patientType: '기본',
-      assignedPatient: null,
-      assignedLocation: null,
-      wornDate: null,
+      patientType: '입원',
+      patientName: '-',
+      locationLabel: '제1보관소',
+      wornDate: '-',
       battery: 100,
       lastSync: new Date().toLocaleString('ko-KR'),
     };
@@ -316,7 +316,8 @@ const LogisticsManager = () => {
                 paginatedAssets.map((asset) => (
                   <tr
                     key={asset.id}
-                    className="border-b border-slate-700 hover:bg-slate-700 transition"
+                    onClick={() => setSelectedItem(asset)}
+                    className="border-b border-slate-700 hover:bg-slate-700 transition cursor-pointer"
                   >
                     <td className="px-6 py-4 text-sm text-white font-medium">
                       {asset.id}
@@ -334,11 +335,11 @@ const LogisticsManager = () => {
                       {asset.patientType}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-300">
-                      {asset.assignedPatient ? (
+                      {asset.patientName && asset.patientName !== '-' ? (
                         <div>
-                          <p>{asset.assignedPatient}</p>
+                          <p>{asset.patientName}</p>
                           <p className="text-xs text-slate-400">
-                            {asset.assignedLocation}
+                            {asset.locationLabel}
                           </p>
                         </div>
                       ) : (

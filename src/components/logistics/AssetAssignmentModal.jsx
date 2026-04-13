@@ -55,14 +55,12 @@ const AssetAssignmentModal = ({ asset, onClose, onAssign }) => {
         ? 'OUTPATIENT'
         : 'HOME';
 
-    onAssign({
-      id: asset?.id,
+    onAssign(asset?.id, {
       patientName: formData.patientName,
-      location: locationType === 'hospital' ? `${formData.ward} ${formData.room}` : formData.address,
+      location: locationType === 'hospital' ? `71-${formData.room}` : formData.address,
       patientType,
       startDate: formData.startDate,
       endDate: formData.endDate,
-      ...formData,
     });
   };
 
